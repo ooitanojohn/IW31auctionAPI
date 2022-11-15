@@ -1,0 +1,15 @@
+{
+    "name": "nitoe/iw31auction-api",
+    "autoload": {
+        "psr-4": {
+            "Nitoe\\Iw31auctionApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "shuto niimi",
+            "email": "71388489+ooitanojohn@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
