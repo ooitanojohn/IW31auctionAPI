@@ -10,6 +10,7 @@ use Classes\Api\TempApi;
 /** テンプレート */
 $app->get('/', TempApi::class . ":helloWorld");
 
+
 /** ユーザのルーティング */
 /** ログイン,アカウント登録 */
 // $app->get("/{args}", UserAPI::class . ":stringHash");
