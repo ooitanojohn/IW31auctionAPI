@@ -4,8 +4,7 @@ namespace Classes\Api;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
-use function PHPSTORM_META\type;
+use Classes\Common\Hash;
 
 class TempApi
 {
@@ -21,6 +20,8 @@ class TempApi
   {
     // urlParam
     $param = $_GET["param"] ?? null;
+    // md5でhash化
+    $hashParam = Hash::crypto($param);
     $response->getBody()->write("get" . $param);
     return $response;
   }

@@ -18,14 +18,9 @@ $app->get('/request', TempApi::class . ":requestInfo");
 
 /** ユーザのルーティング */
 /** ログイン,アカウント登録 */
-// $app->get("/{args}", UserAPI::class . ":stringHash");
 
-// $app->post("/login/{id}", LoginAPI::class . ":login");
-// $app->get("/logout", LoginAPI::class . ":logout");
 // /** マイページ */
-// $app->get("/mypage", MypageAPI::class . ":logout");
 // /** オークション */
-// $app->get("/auction", LoginAPI::class . ":logout");
 
 
 /** 管理側のルーティング */

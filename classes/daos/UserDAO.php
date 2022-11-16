@@ -1,9 +1,9 @@
 <?php
 
-namespace Classes\daos;
+namespace Classes\Daos;
 
 use PDO;
-use Classes\Entities\User_tbl;
+use Classes\Entities\User;
 
 class UserDAO
 {
@@ -25,9 +25,9 @@ class UserDAO
     $this->db = $db;
   }
   /**
-   * userIdによる検索。
+   * ログインIDによる検索。
    *
-   * @param int $userId userID 。
+   * @param int $userId ログインID 。
    * @return User 該当するUserオブジェクト。ただし、該当データがない場合はnull。
    */
   public function findByUserId(int $userId): ?User
@@ -36,36 +36,6 @@ class UserDAO
     $stmt = $this->db->prepare($sql);
 
     $stmt->bindValue(":loginId", $userId, PDO::PARAM_STR);
-    $result = $stmt->execute();
-    $user = null;
-    if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $id = $row["id"];
-      $us_mail = $row["us_mail"];
-      $us_name = $row["us_name"];
-      $us_password = $row["us_password"];
-      $us_auth = $row["us_auth"];
-
-      $user = new User();
-      $user->setId($id);
-      $user->setUsMail($us_mail);
-      $user->setUsName($us_name);
-      $user->setUsPassword($us_password);
-      $user->setUsAuth($us_auth);
-    }
-    return $user;
-  }
-  /**
-   * メールアドレスによる検索。
-   *
-   * @param string $loginId ログインID (メルアド)。
-   * @return User 該当するUserオブジェクト。ただし、該当データがない場合はnull。
-   */
-  public function findByUsMail(string $loginId): ?User
-  {
-    $sql = "SELECT * FROM users WHERE us_mail = :loginId";
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->bindValue(":loginId", $loginId, PDO::PARAM_STR);
     $result = $stmt->execute();
     $user = null;
     if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
