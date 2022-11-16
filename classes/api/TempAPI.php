@@ -9,7 +9,7 @@ class TempApi
 {
   public function helloWorld(Request $request, Response $response, array $args): Response
   {
-    $response->getBody()->write('Hello World');
+    $response->getBody()->write("Hello world!");
     return $response;
   }
 }

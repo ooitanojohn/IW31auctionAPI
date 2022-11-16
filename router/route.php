@@ -2,12 +2,21 @@
 
 /** 使用するコントローラをuseする */
 
-use Class\Api\TempApi;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Classes\Api\TempApi;
 
 /** ルーティングを決める (URLエンドポイント、メソッド設定) */
 /** テンプレート */
 $app->get('/', TempApi::class . ":helloWorld");
-
+$app->get('/ok', function (Request $request, Response $response, $args) {
+  $response->getBody()->write("Hello world!");
+  return $response;
+});
+$app->get('/hello', function (Request $request, Response $response, $args) {
+  $response->getBody()->write("Hello world!");
+  return $response;
+});
 /** ユーザのルーティング */
 /** ログイン,アカウント登録 */
 // $app->get("/{args}", UserAPI::class . ":stringHash");
