@@ -12,7 +12,7 @@ require_once __DIR__ . '/../config/middleware.php';
 require_once __DIR__ . '/../router/route.php';
 $app->setBasePath('/IW31auction/IW31auctionAPI/public');
 // 環境変数読み込み
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 $app->run();
