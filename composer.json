@@ -2,7 +2,7 @@
   "name": "nitoe/iw31auction-api",
   "autoload": {
     "psr-4": {
-      "Conf\\": "config/",
+      "Config\\": "config/",
       "Classes\\": "classes/"
     }
   },
@@ -15,7 +15,6 @@
   "require": {
     "slim/slim": "^4.11",
     "slim/psr7": "^1.6",
-    "vlucas/phpdotenv": "^5.5",
-    "slim/http": "^0.4.0"
+    "vlucas/phpdotenv": "^5.5"
   }
 }

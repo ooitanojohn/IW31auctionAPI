@@ -9,21 +9,32 @@ use Psr\Http\Message\ResponseInterface;
 use Config\Conf;
 use Classes\daos\UserDAO;
 use Classes\entities\User;
-
+use Classes\Common\hash;
 
 /**
  * ログイン・ログアウトに関するコントローラクラス。
  */
-class UserApi
+class UserApi extends UserDAO
 {
+  public function __construct()
+  {
+    $hash = new Hash();
+  }
+  /** */
+  public function stringHash($request, $response, array $args)
+  {
+
+    $response = $hash->Md5($request);
+    echo json_encode($response);
+  }
+
   /**
    * ログイン画面表示処理。
    */
   public function goLogin(ServerRequestInterface $request, ResponseInterface
   $response, array $args): ResponseInterface
   {
-    $returnResponse = $this->view->render($response, "login.html");
-    return $returnResponse;
+    return json_encode($returnResponse);
   }
 
   /**
