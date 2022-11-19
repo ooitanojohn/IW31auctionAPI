@@ -1,3 +1,9 @@
 /vendor/
+<<<<<<< Updated upstream
 composerlock.json
 # .env 共有後コメント外す
+=======
+composer.lock
+# .env
+.DS_Store
+>>>>>>> Stashed changes

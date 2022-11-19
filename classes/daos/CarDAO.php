@@ -24,21 +24,24 @@ class CarDAO
     $this->db = $db;
   }
 
-  public function findByMaker(int $MakerId): ?Car
+  public function findByCar(int $CarId): ?Car
   {
-    $sql = "SELECT * FROM maker_tbl WHERE maker_id = :maker_Id";
+    $sql = "SELECT * FROM users WHERE car_id = :car_Id";
     $stmt = $this->db->prepare($sql);
 
-    $stmt->bindValue(":maker_id", $MakerId, PDO::PARAM_STR);
+    $stmt->bindValue(":car_id", $CarId, PDO::PARAM_STR);
     $result = $stmt->execute();
     $car = null;
     if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $car_id = $row["car_id"];
+      $car_name = $row["car_name"];
       $maker_id = $row["maker_id"];
-      $maker_name = $row["maker_name"];
       
       $car = new Car();
-      $car->setCarId($maker_id);
-      $car->setCarName($maker_name);
+      $car->setCarId($car_id);
+      $car->setCarName($car_name);
+      $car->setMakerId($maker_id);
+      
     }
     return $car;
   }
@@ -49,15 +52,16 @@ class CarDAO
    */
   public function findAll(): array
   {
-    $sql = "SELECT * FROM maker_tbl";
+    $sql = "SELECT * FROM car_tbl";
     $stmt = $this->db->prepare($sql);
     $result = $stmt->execute();
     $CarList = [];
     while ($row = $stmt->fetch()) {
       $Car = new Car();
-      $Car->setCarId($row["maker_id"]);
-      $Car->setCarName($row["maker_name"]);
-      $CarList[$row['maker_id']] = $Car;
+      $Car->setCarId($row["car_id"]);
+      $Car->setCarName($row["car_name"]);
+      $Car->setMakerId($row["maker_id"]);
+      $CarList[$row['car_id']] = $Car;
     }
     return $CarList;
   }
@@ -68,16 +72,17 @@ class CarDAO
    */
   public function insert(Car $Car): int
   {
-    $sqlInsert = "INSERT INTO maker_tbl (maker_name) VALUES(:maker_name)";
+    $sqlInsert = "INSERT INTO biddings_tbl (car_name, maker_id) VALUES(:car_name,:maker_id)";
     $stmt = $this->db->prepare($sqlInsert);
-    $stmt->bindvalue(':maker_name', $Car->getCarName(), PDO::PARAM_STR);
+    $stmt->bindvalue(':car_name', $Car->getCarName(), PDO::PARAM_STR);
+    $stmt->bindvalue(':maker_id', $Car->getMakerName(), PDO::PARAM_STR);
     $result = $stmt->execute();
     if ($result) {
       $makerId = $this->db->lastInsertId();
     } else {
       $makerId = -1;
     }
-    return $makerId;
+    return $maker_id;
   }
   /**
    * 車更新
@@ -86,9 +91,10 @@ class CarDAO
    */
   public function update(Car $Car): bool
   {
-    $sqlUpdate = " UPDATE maker_tbl SET  maker_name= :maker_name WHERE maker_id = :maker_id";
+    $sqlUpdate = " UPDATE car_tbl SET  car_name= :car_name , maker_id = :maker_id  WHERE car_id = :car_id";
     $stmt = $this->db->prepare($sqlUpdate);
-    $stmt->bindvalue(':maker_name', $Car->getMakerName(), PDO::PARAM_STR);
+    $stmt->bindvalue(':car_name', $Car->getCarName(), PDO::PARAM_STR);
+    $stmt->bindvalue(':maker_id', $Car->getMakerId(), PDO::PARAM_STR);
     $result = $stmt->execute();
     return $result;
   }
@@ -97,11 +103,11 @@ class CarDAO
    * @param integer ユーザID
    * @return boolean 登録が成功したかどうか
    */
-  public function delete(int $makerId): bool
+  public function delete(int $car_id): bool
   {
-    $sql = "DELETE FROM maker_tbl WHERE maker_id = :maker_id";
+    $sql = "DELETE FROM car_tbl WHERE car_id = :car_id";
     $stmt = $this->db->prepare($sql);
-    $stmt->bindValue(":maker_id", $makerId, PDO::PARAM_INT);
+    $stmt->bindValue(":car_id", $car_id, PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }
