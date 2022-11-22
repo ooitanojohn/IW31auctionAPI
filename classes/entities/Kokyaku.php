@@ -1,14 +1,23 @@
-<?php 
+<?php
 
 namespace Classes\Entities;
 
 class Kokyaku {
+  private ?int $purchase_id = null;
   private ?int $user_id = null;
-  private ?int $kokyaku_money = null;
-  private ?string $kokyaku_time = "";
+  private ?int $price = "";
+  private ?string $purchase_datetime = null;
   private ?int $product_id = null;
 
   // アクセスメソッド
+  public function getPurcheseId() :?int
+  {
+    return $this->purchase_id;
+  }
+  public function setPurchase($purchase_id) :void
+  {
+    $this->purhcase = $purchase_id;
+  }
   public function getUserId() :?int
   {
     return $this->user_id;
@@ -17,29 +26,28 @@ class Kokyaku {
   {
     $this->user_id = $user_id;
   }
-  public function getKokyakuMoney() :?int
+  public function getPrice() :?string
   {
-    return $this->kokyaku_money;
+    return $this->price;
   }
-  public function setKokyakuMoney($kokyaku_money) :void
+  public function setPrice($price) :void
   {
-    $this->kokyaku_money = $kokyaku_money;
+    $this->price = $price;
   }
-  public function getKokyakuTime() :?string
+  public function getPurchaseDatetime() :?int
   {
-    return $this->kokyaku_time;
+    return $this->purchase_datetime;
   }
-  public function setKokyakuTime($kokyaku_time) :void
+  public function setPurchaseDatetime($purchase_datetime) :void
   {
-    $this->kokyaku_time = $kokyaku_time;
+    $this->purchase_datetime = $purchase_datetime;
   }
   public function getProductId() :?int
   {
     return $this->product_id;
   }
-  public function setProductId($product_id) :void
+  public function setProductId() :void
   {
     $this->product_id = $product_id;
   }
 }
-?>
