@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Classes\Entities;
 
@@ -51,4 +51,3 @@ class Kokyaku {
     $this->product_id = $product_id;
   }
 }
-?>

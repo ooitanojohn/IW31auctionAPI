@@ -12,7 +12,7 @@ namespace Iw31auctionApi\Conf;
  */
 class Conf
 {
-  const DB_DNS = 'mysql:host=localhost;dbname=auction;charset=utf8';
-  const DB_USERNAME = 'root'; // user作成して
-  const DB_PASSWORD = ''; // パスワード変更 .envに記述
+  const DB_DNS = $_ENV['DB_DNS'];
+  const DB_USERNAME = $_ENV['DB_USERNAME']; // user作成して
+  const DB_PASSWORD = $_ENV['DB_PASSWORD']; //パスワード変更
 }

@@ -1,4 +1,0 @@
-// オリジン(clientのブラウザのURL指定を許可する)
-// Header set Access-Control-Allow-Origin http://localhost:3000
-// ;Header set Access-Control-Allow-Headers "application/json, text/plain, */*"
-// ;Header set Access-Control-Allow-Credentials true
