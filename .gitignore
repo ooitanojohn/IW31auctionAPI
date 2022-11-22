@@ -1,3 +1,5 @@
 /vendor/
+composerlock.json
 composer.lock
-# .env
+# .env 共有後コメント外す
+.DS_Store
