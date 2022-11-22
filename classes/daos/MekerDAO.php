@@ -1,8 +1,9 @@
 <?php
-namespace Classes\daos;
+
+namespace Classes\Daos;
 
 use PDO;
-use Classes\Entities\Car_tbl;
+use Classes\Entities\Car;
 
 class CarDAO
 {
@@ -26,7 +27,7 @@ class CarDAO
 
   public function findByMaker(int $MakerId): ?Car
   {
-    $sql = "SELECT * FROM maker_tbl WHERE maker_id = :maker_Id";
+    $sql = "SELECT * FROM maker WHERE maker_id = :maker_Id";
     $stmt = $this->db->prepare($sql);
 
     $stmt->bindValue(":maker_id", $MakerId, PDO::PARAM_STR);
@@ -35,7 +36,7 @@ class CarDAO
     if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $maker_id = $row["maker_id"];
       $maker_name = $row["maker_name"];
-      
+
       $car = new Car();
       $car->setCarId($maker_id);
       $car->setCarName($maker_name);
@@ -49,7 +50,7 @@ class CarDAO
    */
   public function findAll(): array
   {
-    $sql = "SELECT * FROM maker_tbl";
+    $sql = "SELECT * FROM maker";
     $stmt = $this->db->prepare($sql);
     $result = $stmt->execute();
     $CarList = [];
@@ -68,7 +69,7 @@ class CarDAO
    */
   public function insert(Car $Car): int
   {
-    $sqlInsert = "INSERT INTO maker_tbl (maker_name) VALUES(:maker_name)";
+    $sqlInsert = "INSERT INTO maker (maker_name) VALUES(:maker_name)";
     $stmt = $this->db->prepare($sqlInsert);
     $stmt->bindvalue(':maker_name', $Car->getCarName(), PDO::PARAM_STR);
     $result = $stmt->execute();
@@ -86,7 +87,7 @@ class CarDAO
    */
   public function update(Car $Car): bool
   {
-    $sqlUpdate = " UPDATE maker_tbl SET  maker_name= :maker_name WHERE maker_id = :maker_id";
+    $sqlUpdate = " UPDATE maker SET  maker_name= :maker_name WHERE maker_id = :maker_id";
     $stmt = $this->db->prepare($sqlUpdate);
     $stmt->bindvalue(':maker_name', $Car->getMakerName(), PDO::PARAM_STR);
     $result = $stmt->execute();
@@ -99,11 +100,10 @@ class CarDAO
    */
   public function delete(int $makerId): bool
   {
-    $sql = "DELETE FROM maker_tbl WHERE maker_id = :maker_id";
+    $sql = "DELETE FROM maker WHERE maker_id = :maker_id";
     $stmt = $this->db->prepare($sql);
     $stmt->bindValue(":maker_id", $makerId, PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }
 }
-?>

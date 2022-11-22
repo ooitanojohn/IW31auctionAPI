@@ -4,8 +4,11 @@ namespace Classes\Api;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
-use function PHPSTORM_META\type;
+use Classes\Common\Hash; // 関数呼び出し例
+use PDO;
+use PDOException;
+use Config\MySQLConf; // DBの設定
+use Classes\Daos\BiddingDAO; // BiddingDAO
 
 class TempApi
 {
@@ -21,8 +24,29 @@ class TempApi
   {
     // urlParam
     $param = $_GET["param"] ?? null;
-    $response->getBody()->write("get" . $param);
-    return $response;
+    $hash = new Hash();
+    /** SQL */
+    try {
+      $db = new PDO(MySQLConf::DB_DNS, MySQLConf::DB_USERNAME, MySQLConf::DB_PASSWORD); // DB接続
+      $userDAO = new BiddingDAO($db);
+      $user = $userDAO->findAll();
+      /** $userにSQLがはいった状態 */
+    } catch (PDOException $ex) {
+      $exCode = $ex->getCode();
+      // throw new DataAccessException("DB接続に失敗しました。", $exCode, $ex);
+    } finally {
+      $db = null;
+    }
+    /** 処理 */
+    /** 配列並び替え */
+    var_dump($user);
+
+    /** データをjson化して返す */
+    $data = "get: " . $hash->md5($param);
+    $payload = json_encode($data);
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
   }
   /**
    * post取得
@@ -32,16 +56,26 @@ class TempApi
    * @param array $args
    * @return Response
    */
-  public function post(Request $request, Response $response, array $args): Response
+  public function post(Request $request, $response, array $args)
   {
     // Get all POST parameters
     $params = (array)$request->getParsedBody();
-    var_dump($params);
+    // var_dump($params);
     // Get a single POST parameter
     $foo = $params['foo'] ?? null;
-    var_dump($foo);
-    $response->getBody()->write("post");
-    return $response;
+    $bar = $params['bar'] ?? null;
+
+    // var_dump($bar);
+    $data = [
+      "httpMethod" => "post",
+      // "id" => $foo,
+      "name" => $bar
+    ];
+    $data = array('name' => 'Bob', 'age' => 40);
+    $payload = json_encode($data);
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
   }
   /**
    * urlでの切り分け

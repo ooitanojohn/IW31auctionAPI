@@ -1,8 +1,9 @@
 <?php
-namespace Classes\daos;
+
+namespace Classes\Daos;
 
 use PDO;
-use Classes\Entities\Car_tbl;
+use Classes\Entities\Car;
 
 class CarDAO
 {
@@ -36,12 +37,11 @@ class CarDAO
       $car_id = $row["car_id"];
       $car_name = $row["car_name"];
       $maker_id = $row["maker_id"];
-      
+
       $car = new Car();
       $car->setCarId($car_id);
       $car->setCarName($car_name);
       $car->setMakerId($maker_id);
-      
     }
     return $car;
   }
@@ -52,7 +52,7 @@ class CarDAO
    */
   public function findAll(): array
   {
-    $sql = "SELECT * FROM car_tbl";
+    $sql = "SELECT * FROM car";
     $stmt = $this->db->prepare($sql);
     $result = $stmt->execute();
     $CarList = [];
@@ -72,7 +72,7 @@ class CarDAO
    */
   public function insert(Car $Car): int
   {
-    $sqlInsert = "INSERT INTO biddings_tbl (car_name, maker_id) VALUES(:car_name,:maker_id)";
+    $sqlInsert = "INSERT INTO Bidding (car_name, maker_id) VALUES(:car_name,:maker_id)";
     $stmt = $this->db->prepare($sqlInsert);
     $stmt->bindvalue(':car_name', $Car->getCarName(), PDO::PARAM_STR);
     $stmt->bindvalue(':maker_id', $Car->getMakerName(), PDO::PARAM_STR);
@@ -91,7 +91,7 @@ class CarDAO
    */
   public function update(Car $Car): bool
   {
-    $sqlUpdate = " UPDATE car_tbl SET  car_name= :car_name , maker_id = :maker_id  WHERE car_id = :car_id";
+    $sqlUpdate = " UPDATE car SET  car_name= :car_name , maker_id = :maker_id  WHERE car_id = :car_id";
     $stmt = $this->db->prepare($sqlUpdate);
     $stmt->bindvalue(':car_name', $Car->getCarName(), PDO::PARAM_STR);
     $stmt->bindvalue(':maker_id', $Car->getMakerId(), PDO::PARAM_STR);
@@ -105,11 +105,10 @@ class CarDAO
    */
   public function delete(int $car_id): bool
   {
-    $sql = "DELETE FROM car_tbl WHERE car_id = :car_id";
+    $sql = "DELETE FROM car WHERE car_id = :car_id";
     $stmt = $this->db->prepare($sql);
     $stmt->bindValue(":car_id", $car_id, PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }
 }
-?>

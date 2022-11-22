@@ -1,8 +1,9 @@
 <?php
-namespace Classes\daos;
+
+namespace Classes\Daos;
 
 use PDO;
-use Classes\Entities\Kokyaku_tbl;
+use Classes\Entities\Kokyaku;
 
 class KokyakuDAO
 {
@@ -23,7 +24,7 @@ class KokyakuDAO
     $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     $this->db = $db;
   }
-  
+
   /**
    * 顧客リスト全取得
    *
@@ -31,7 +32,7 @@ class KokyakuDAO
    */
   public function findAll(): array
   {
-    $sql = "SELECT * FROM kokyaku_tbl";
+    $sql = "SELECT * FROM kokyaku";
     $stmt = $this->db->prepare($sql);
     $result = $stmt->execute();
     $KokyakuList = [];
@@ -53,7 +54,7 @@ class KokyakuDAO
    */
   public function insert(Kokyaku $Kokyaku): int
   {
-    $sqlInsert = "INSERT INTO kokyaku_tbl (user_id, price, purchase_datetime, product_id) VALUES(:user_id,:price,:purchase_datetime,:product_id)";
+    $sqlInsert = "INSERT INTO kokyaku (user_id, price, purchase_datetime, product_id) VALUES(:user_id,:price,:purchase_datetime,:product_id)";
     $stmt = $this->db->prepare($sqlInsert);
     $stmt->bindvalue(':user_id', $Kokyaku->getUserId(), PDO::PARAM_STR);
     $stmt->bindvalue(':price', $Kokyaku->getPrice(), PDO::PARAM_STR);
@@ -74,7 +75,7 @@ class KokyakuDAO
    */
   public function update(Kokyaku $Kokyaku): bool
   {
-    $sqlUpdate = " UPDATE kokyaku_tbl SET  user_id= :user_id , price = :price , purchase_datetime = :purchase_datetime , product_id = :product_id  WHERE purchase_id = :purchase_id";
+    $sqlUpdate = " UPDATE kokyaku SET  user_id= :user_id , price = :price , purchase_datetime = :purchase_datetime , product_id = :product_id  WHERE purchase_id = :purchase_id";
     $stmt = $this->db->prepare($sqlUpdate);
     $stmt->bindvalue(':user_id', $Kokyaku->getUserId(), PDO::PARAM_STR);
     $stmt->bindvalue(':price', $Kokyaku->getPrice(), PDO::PARAM_STR);
@@ -90,11 +91,10 @@ class KokyakuDAO
    */
   public function delete(int $purchase_id): bool
   {
-    $sql = "DELETE FROM purchase_tbl WHERE purchase_id = :purchase_id";
+    $sql = "DELETE FROM purchase WHERE purchase_id = :purchase_id";
     $stmt = $this->db->prepare($sql);
     $stmt->bindValue(":purchase_id", $purchase_id, PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }
 }
-?>

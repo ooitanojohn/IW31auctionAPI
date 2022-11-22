@@ -7,9 +7,8 @@ use PDOException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Config\Conf;
-use Classes\daos\UserDAO;
 use Classes\entities\User;
-use Classes\Common\hash;
+use Classes\Daos\UserDAO;
 
 /**
  * ログイン・ログアウトに関するコントローラクラス。
