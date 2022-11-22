@@ -1,6 +1,6 @@
 <?php
 
-namespace Classes\Entities;
+namespace Classes\daos;
 
 class Meker
 {

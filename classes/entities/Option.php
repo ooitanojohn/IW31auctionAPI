@@ -1,5 +1,4 @@
 <?php 
-
 namespace Classes\Entities;
 
 class Option
@@ -109,19 +108,19 @@ class Option
   { 
     $this->etc = $etc;
   }
-  public function getKey_less():?int
+  public function getKeyLess():?int
   {
     return $this->key_less;
   }
-  public function setKey_less($key_less) :void
+  public function setKeyLess($key_less) :void
   { 
     $this->key_less = $key_less;  
   }
-  public function getSmart_key():?int
+  public function getSmartKey():?int
   {
     return $this->smart_key;
   }
-  public function setSmart_key($smart_key) :void
+  public function setSmartKey($smart_key) :void
   {
     $this->smart_key = $smart_key;  
   }
@@ -221,11 +220,11 @@ class Option
   {
     $this->esc = $esc;
   }
-  public function getTraction_con():?int
+  public function getTractioncon():?int
   {
     return $this->traction_con;
   }
-  public function setTraction_con($traction_con) :void
+  public function setTractioncon($traction_con) :void
   {
     $this->traction_con = $traction_con;
   }

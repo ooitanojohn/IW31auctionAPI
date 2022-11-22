@@ -6,9 +6,9 @@ class User
 {
   // 主キーのid
   private ?int $id = null;
-  // メールアドレス
+  // ユーザー名
   private ?string $user_name = "";
-  // 名前
+  // ログインID
   private ?string $user_login_id = "";
   // パスワード
   private ?string $user_password = "";
@@ -22,7 +22,7 @@ class User
   private ?int $card_number = null;
   // カードキー
   private ?int $card_key = null;
-  //　耐怪情報
+  //　退会情報
   private ?int $user_state = null;
 
   // アクセサメソッド
