@@ -2,7 +2,7 @@
 
 namespace Classes\Entities;
 
-class Biddings
+class Bidding
 {
   private ?int $user_id = null;
   private ?int $product_id = null;
@@ -42,4 +42,3 @@ class Biddings
     $this->bidding_money = $bidding_money;
   }
 }
-?>

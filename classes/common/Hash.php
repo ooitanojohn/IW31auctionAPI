@@ -9,4 +9,9 @@ class Hash
   {
     return md5($val);
   }
+
+  public static function plus(string $val)
+  {
+    return $val . "plus";
+  }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Classes\daos;
+namespace Classes\Daos;
 
 use PDO;
-use classes\entities\User;
+use Classes\Entities\User;
 
 class UserDAO
 {
@@ -113,7 +113,7 @@ class UserDAO
   {
     $sql = "SELECT * FROM user_tbl";
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute();
+    $stmt->execute();
     $UserList = [];
     while ($row = $stmt->fetch()) {
       $User = new User();
