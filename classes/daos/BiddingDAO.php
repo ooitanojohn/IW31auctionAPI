@@ -60,7 +60,7 @@ class BiddingDAO
    */
   public function findAll(): array
   {
-    $sql = "SELECT * FROM bidding";
+    $sql = "SELECT * FROM biddings";
     $stmt = $this->db->prepare($sql);
     $stmt->execute();
     $BiddingList = [];
@@ -68,9 +68,9 @@ class BiddingDAO
       $Bidding = new Bidding();
       $Bidding->setUserId($row["user_id"]);
       $Bidding->setProductId($row["product_id"]);
-      $Bidding->setBiddingTime($row["bidding_time"]);
       $Bidding->setBiddingMoney($row["bidding_money"]);
-      $BiddingList[$row['bidding_id']] = $Bidding;
+      $Bidding->setBiddingTime($row["bidding_time"]);
+      $BiddingList[] = $Bidding;
     }
     return $BiddingList;
   }
