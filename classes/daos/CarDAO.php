@@ -25,6 +25,24 @@ class CarDAO
     $this->db = $db;
   }
 
+  public function collectiveRegistration(Car $Car)
+  {
+    $sql = "INSERT INTO cars(car_name, stock, maker_id, update_time) VALUES (:car_name,:stock,:maker_id,:update_time)";
+    $stmt = $this->db->prepare($sql);
+    for ($i=0; $i < 10; $i++) { 
+      $stmt->bindValue(':car_name', $Car->getCarName(), PDO::PARAM_STR);
+      $stmt->bindValue(':stock', $Car->getStock(), PDO::PARAM_INT);
+      $stmt->bindValue(':maker_id', $Car->getMakerId(), PDO::PARAM_INT);
+      $stmt->bindValue(':update_time', $Car->getUpdateTime(), PDO::PARAM_STR);
+      $result = $stmt->execute();
+    }
+    if ($result) {
+      $makerId = $this->db->lastInsertId();
+    } else {
+      $makerId = -1;
+    }
+  }
+
   public function findByCar(int $CarId): ?Car
   {
     $sql = "SELECT * FROM users WHERE car_id = :car_Id";

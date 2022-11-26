@@ -30,7 +30,7 @@ class kokyakuDAO
    * @param int $userId userID 。
    * @return Kokyaku 該当するUserオブジェクト。ただし、該当データがない場合はnull。
    */
-  public function findByKokyakuId(int $userId): ?UserDAO
+  public function findByKokyakuId(int $userId): ?kokyakuDAO
   {
     $sql = "SELECT * FROM kokyaku_tbl WHERE id = :loginId";
     $stmt = $this->db->prepare($sql);

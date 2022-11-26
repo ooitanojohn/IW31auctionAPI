@@ -15,6 +15,7 @@
   "require": {
     "slim/slim": "^4.11",
     "slim/psr7": "^1.6",
-    "vlucas/phpdotenv": "^5.5"
+    "vlucas/phpdotenv": "^5.5",
+    "fakerphp/faker": "^1.20"
   }
 }
