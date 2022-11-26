@@ -28,8 +28,8 @@ class TempApi
     /** SQL */
     try {
       $db = new PDO(MySQLConf::DB_DNS, MySQLConf::DB_USERNAME, MySQLConf::DB_PASSWORD); // DB接続
-      $userDAO = new BiddingDAO($db);
-      $user = $userDAO->findAll();
+      $biddingDAO = new BiddingDAO($db);
+      $bidding = $biddingDAO->findAll();
       /** $userにSQLがはいった状態 */
     } catch (PDOException $ex) {
       $exCode = $ex->getCode();
@@ -38,9 +38,9 @@ class TempApi
       $db = null;
     }
     /** 処理 */
+    var_dump($bidding);
     /** 配列並び替え */
-    var_dump($user);
-
+    $param = "fds";
     /** データをjson化して返す */
     $data = "get: " . $hash->md5($param);
     $payload = json_encode($data);

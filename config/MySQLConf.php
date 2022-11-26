@@ -12,11 +12,11 @@ namespace Config;
  */
 class MySQLConf
 {
-  const DB_HOSTNAME = $_ENV['DB_HOSTNAME']; // hostname
-  const DB_USERNAME = $_ENV['DB_USERNAME']; // user作成して
-  const DB_PASSWORD = $_ENV['DB_PASSWORD']; // パスワード変更
-  const DB_DATABASE = $ENV['DB_DATABASE']; // データベース
-  const DB_CHARSET = $_ENV['DB_CHARSET'];
-  const DB_PORT = $_ENV['DB_PORT'];
-  const DB_DNS = "mysql:host=localhost;dbname=auction;charset=utf8";
+  const DB_DNS = "mysql:host=localhost;dbname=auction;charset=utf8;port=3308";
+  const DB_HOSTNAME = "localhost"; // hostname
+  const DB_USERNAME = 'root'; // user作成して
+  const DB_PASSWORD =  ''; // パスワード変更
+  const DB_DATABASE = "auction"; // データベース
+  const DB_CHARSET = "utf8";
+  const DB_PORT = "3308";
 }
