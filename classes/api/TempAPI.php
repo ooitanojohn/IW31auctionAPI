@@ -38,7 +38,7 @@ class TempApi
       $db = null;
     }
     /** 処理 */
-    var_dump($bidding);
+    // var_dump($bidding);
     /** 配列並び替え */
     $param = "fds";
     /** データをjson化して返す */

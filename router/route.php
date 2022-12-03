@@ -5,6 +5,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Classes\Api\TempApi;
+use Classes\Api\CarApi;
 
 /** ルーティングを決める (URLエンドポイント、メソッド設定) */
 /** テンプレート */
@@ -16,6 +17,7 @@ $app->get('/url', TempApi::class . ":url");
 $app->get('/url/{page}', TempApi::class . ":url");
 $app->get('/request', TempApi::class . ":requestInfo");
 
+$app->get('/car', CarApi::class . ":get");
 /** ユーザのルーティング */
 /** ログイン,アカウント登録 */
 // $app->get("/{args}", UserAPI::class . ":stringHash");

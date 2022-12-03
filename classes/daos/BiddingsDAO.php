@@ -1,8 +1,9 @@
 <?php
-namespace Classes\daos;
+
+namespace Classes\Daos;
 
 use PDO;
-use Classes\Entities\Biddings;
+use Classes\Entities\Bidding;
 
 class BiddingsDAO
 {
@@ -24,108 +25,74 @@ class BiddingsDAO
     $this->db = $db;
   }
 
-  /**
-   * biddingsIdによる検索。
-   *
-   * @param int $userId userID 。
-   * @return Biddings 該当するUserオブジェクト。ただし、該当データがない場合はnull。
-   */
-  public function findByBiddingsId(int $biddings_id): ?Biddings
+  
+
+  public function collectiveRegistration(Bidding $Bidding)
   {
-    $sql = "SELECT * FROM biddings_tbl WHERE biddings_id = :biddingsId";
+    $sql = "INSERT INTO biddings(user_id, product_id, bidding_money, bidding_time) VALUES (:user_id,:product_id,bidding_money,bidding_time)";
     $stmt = $this->db->prepare($sql);
-
-    $stmt->bindValue(":biddingId", $biddings_id, PDO::PARAM_STR);
-    $result = $stmt->execute();
-    $user = null;
-    if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $biddings_id = $row["biddings_id"];
-      $user_id = $row["user_id"];
-      $product_id = $row["product_id"];
-      $biddings_time = $row["biddings_time"];
-      $biddings_money = $row["biddings_money"];
-
-      $Biddings = new Biddings();
-      $Biddings->setBiddingsId($biddings_id);
-      $Biddings->setUserId($user_id);
-      $Biddings->setProductId($product_id);
-      $Biddings->setBiddingsTime($biddings_time);
-      $Biddings->setBiddingsMoney($biddings_money);
+    for ($i=0; $i < 10; $i++) { 
+      $stmt->bindValue(':user_id', $Bidding->getUserId(), PDO::PARAM_INT);
+      $stmt->bindValue(':product_id', $Bidding->getProductId(), PDO::PARAM_INT);
+      $stmt->bindValue(':bidding_time', $Bidding->getBiddingTime(), PDO::PARAM_STR);
+      $stmt->bindValue(':bidding_money', $Bidding->getBiddingMoney(), PDO::PARAM_INT);
+      $result = $stmt->execute();
     }
-    return $Biddings;
+    if ($result) {
+      $biddingId = $this->db->lastInsertId();
+    } else {
+      $biddingId = -1;
+    }
+    return $biddingId;
   }
+
   /**
-   * 入札リスト全取得
-   *
-   * @return Biddings Biddingsオブジェクト 該当なしの場合null
+   * biddings全取得
    */
-  public function findAll(): array
+  public function findAll() 
   {
-    $sql = "SELECT * FROM biddings_tbl";
+    $sql = "SELECT * FROM biddings";
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute();
-    $BiggingsList = [];
+    $stmt->execute();
+    $BiddingList = [];
     while ($row = $stmt->fetch()) {
-      $Biddings = new Biddings();
-      $Biddings->setBiddingId($row["bidding_id"]);
-      $Biddings->setUserId($row["user_id"]);
-      $Biddings->setProductId($row["product_id"]);
-      $Biddings->setBiddingTime($row["bidding_time"]);
-      $Biddings->setBiddingMoney($row["bidding_money"]);
-      $BiddingsList[$row['bidding_id']] = $Biddings;
+      $Bidding = new Bidding();
+      $Bidding->setUserId($row["user_id"]);
+      $Bidding->setProductId($row["product_id"]);
+      $Bidding->setBiddingMoney($row["bidding_money"]);
+      $Bidding->setBiddingTime($row["bidding_time"]);
+      $BiddingList[$row['user_id']] = $Bidding;
     }
-    return $BiddingsList;
+    return $BiddingList;
   }
 
-  /**
-   * ユーザ新規作成画面
-   * @param Biddings
-   * @return integer 登録失敗 = -1
-   */
-  public function insert(Biddings $Biddings): int
+  public function insert(Bidding $Bidding): int  
   {
-    $sqlInsert = "INSERT INTO biddings_tbl (user_id , product_id, biddings_time, biddings_money) VALUES(:user_id,:product_id,:biddings_time,biddings_money)";
-    $stmt = $this->db->prepare($sqlInsert);
-    $stmt->bindvalue(':user_id', $Biddings->getUserID(), PDO::PARAM_STR);
-    $stmt->bindvalue(':product_id', $Biddings->getProductId(), PDO::PARAM_STR);
-    $stmt->bindvalue(':biddings_time', $Biddings->getBiddingsTime(), PDO::PARAM_STR);
-    $stmt->bindvalue(':biddings_money', $User->getBiddingsMoney(), PDO::PARAM_STR);
+    $sql = "INSERT INTO biddings(user_id, product_id, bidding_money, bidding_time) VALUES (:user_id, :product_id, :bidding_money, :bidding_time)";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    $stmt->bindValue(':user_id', $Bidding->getUserId(), PDO::PARAM_INT);
+    $stmt->bindValue(':product_id', $Bidding->getProductId(), PDO::PARAM_INT);
+    $stmt->bindValue(':bidding_time', $Bidding->getBiddingTime(), PDO::PARAM_STR);
+    $stmt->bindValue(':bidding_money', $Bidding->getBiddingMoney(), PDO::PARAM_INT);
     $result = $stmt->execute();
     if ($result) {
-      $biddings_id = $this->db->lastInsertId();
+      $Bidding_id = $this->db->lastInsertId();
     } else {
-      $biddings_id = -1;
+      $Bidding_id = -1;
     }
-    return $biddings_id;
+    return $Bidding_id;
   }
-  /**
-   * ユーザ更新
-   * @param Biddings
-   * @return boolean
-   */
-  public function update(Biddings $Biddings): bool
+
+  public function update(Bidding $Bidding)
   {
-    $sqlUpdate = " UPDATE biddings_tbl SET user_id = :user_id , product_id = :product_id , biddings_time = :biddings_time , biddings_money= :biddings_money WHERE biddings_id = :biddings_id";
+    $sqlUpdate = "UPDATE biddings SET user_id = :user_id , product_id = :product_id , Bidding_time = :Bidding_time , Bidding_money= :Bidding_money WHERE Bidding_id = :Bidding_id";
     $stmt = $this->db->prepare($sqlUpdate);
-    $stmt->bindvalue(':user_id', $Biddings->getUserId(), PDO::PARAM_STR);
-    $stmt->bindvalue(':product_id', $Biddings->getProductId(), PDO::PARAM_STR);
-    $stmt->bindvalue(':biddings_time', $Biddings->getBiddingsTime(), PDO::PARAM_STR);
-    $stmt->bindvalue(':biddings_money', $Biddings->getBiddingsMoney(), PDO::PARAM_STR);
-    $result = $stmt->execute();
-    return $result;
-  }
-  /**
-   * ユーザ削除
-   * @param integer ユーザID
-   * @return boolean 登録が成功したかどうか
-   */
-  public function delete(int $id): bool
-  {
-    $sql = "DELETE FROM biddings_tbl WHERE biddings_id = :biddings_id";
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+    $stmt->bindvalue(':user_id', $Bidding->getUserId(), PDO::PARAM_INT);
+    $stmt->bindvalue(':product_id', $Bidding->getProductId(), PDO::PARAM_INT);
+    $stmt->bindvalue(':Bidding_time', $Bidding->getBiddingTime(), PDO::PARAM_STR);
+    $stmt->bindvalue(':Bidding_money', $Bidding->getBiddingMoney(), PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }
 }
-?>

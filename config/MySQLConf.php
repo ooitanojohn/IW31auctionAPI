@@ -12,7 +12,7 @@ namespace Config;
  */
 class MySQLConf
 {
-  const DB_DNS = "mysql:host=localhost;dbname=auction;charset=utf8;port=3308";
+  const DB_DNS = "mysql:host=localhost;dbname=auction;charset=utf8;";
   const DB_HOSTNAME = "localhost"; // hostname
   const DB_USERNAME = 'root'; // user作成して
   const DB_PASSWORD =  ''; // パスワード変更

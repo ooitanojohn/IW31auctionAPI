@@ -24,6 +24,31 @@ class UserDAO
     $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     $this->db = $db;
   }
+  public function collectiveRegistration(User $User)
+  {
+    $sql = "INSERT INTO users(user_id, user_login_id, hashed_password, user_name, user_mail, user_post_code, user_address, user_phone_number, card_number, card_key, icon_img, user_state) VALUES (:user_id, :user_login_id, :hashed_password, :user_name, :user_mail, :user_post_code, :user_address, :user_phone_number, :card_number, :card_key, :icon_img, :user_state)";
+    $stmt = $this->db->prepare($sql);
+    for ($i=0; $i < 10; $i++) { 
+      $stmt->bindValue(':user_login_id', $User->getUserLoginId(), PDO::PARAM_STR);
+      $stmt->bindValue(':hashed_password', $User->getHashedPassword(), PDO::PARAM_STR);
+      $stmt->bindValue(':user_name', $User->getUserName(), PDO::PARAM_STR);
+      $stmt->bindValue(':user_mail', $User->getUserMail(), PDO::PARAM_STR);
+      $stmt->bindValue(':user_post_code', $User->getUserPostCode(), PDO::PARAM_STR);
+      $stmt->bindValue(':user_address', $User->getUserAddress(), PDO::PARAM_STR);
+      $stmt->bindValue(':user_phone_number', $User->getUserPhoneNumber(), PDO::PARAM_INT);
+      $stmt->bindValue(':card_number', $User->getCardNumber(), PDO::PARAM_INT);
+      $stmt->bindValue(':card_key', $User->getCardKey(), PDO::PARAM_INT);
+      $stmt->bindValue(':icon_img', $User->getIconImg(), PDO::PARAM_STR);
+      $stmt->bindValue(':user_state ', $User->getUserState(), PDO::PARAM_INT);
+      $result = $stmt->execute();
+    }
+    if ($result) {
+      $saleId = $this->db->lastInsertId();
+    } else {
+      $saleId = -1;
+    }
+    return $saleId;
+  }
   /**
    * userIdによる検索。
    *
@@ -32,37 +57,41 @@ class UserDAO
    */
   public function findByUserId(int $userId): ?UserDAO
   {
-    $sql = "SELECT * FROM user_tbl WHERE user_id = :loginId";
+    $sql = "SELECT * FROM users WHERE user_id = :user_id";
     $stmt = $this->db->prepare($sql);
-
-    $stmt->bindValue(":loginId", $userId, PDO::PARAM_STR);
+    $stmt->bindValue(":user_id", $userId, PDO::PARAM_INT);
     $result = $stmt->execute();
-    $user = null;
+
+    $User = null;
     if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $id = $row["id"];
-      $user_name = $row["user_name"];
+      $user_id = $row["user_id"];
       $user_login_id = $row["user_login_id"];
-      $user_password = $row["user_password"];
+      $hashed_password = $row["hashed_password"];
+      $user_name = $row["user_name"];
       $user_mail = $row["user_mail"];
       $user_post_code = $row["user_post_code"];
+      $user_address = $row["user_address"];
       $user_phone_number = $row["user_phone_number"];
       $card_number = $row["card_number"];
       $card_key = $row["card_key"];
+      $icon_img = $row["icon_img"];
       $user_state = $row["user_state"];
 
-      $user = new User();
-      $user->setId($id);
-      $user->setUserName($user_name);
-      $user->setUserLoginId($user_login_id);
-      $user->setUserPassword($user_password);
-      $user->setUserMail($user_mail);
-      $user->setUserPostCode($user_post_code);
-      $user->setUserPhoneNumber($user_phone_number);
-      $user->setCardNumber($card_number);
-      $user->setCardKey($card_key);
-      $user->setUserState($user_state);
+      $User = new User();
+      $User->setUserId($user_id);
+      $User->setUserLoginId($user_login_id);
+      $User->setHashedPassword($hashed_password);
+      $User->setUserName($user_name);
+      $User->setUserMail($user_mail);
+      $User->setUserPostCode($user_post_code);
+      $User->setUserAddress($user_address);
+      $User->setUserPhoneNumber($user_phone_number);
+      $User->setCardNumber($card_number);
+      $User->setCardKey($card_key);
+      $User->setIconImg($icon_img);
+      $User->setUserState ($user_state);
     }
-    return $user;
+    return $User;
   }
   /**
    * メールアドレスによる検索。
@@ -72,37 +101,41 @@ class UserDAO
    */
   public function findByUserMail(string $user_mail): ?User
   {
-    $sql = "SELECT * FROM user_tbl WHERE user_mail = :user_mail";
+    $sql = "SELECT * FROM users WHERE user_mail = :user_mail";
     $stmt = $this->db->prepare($sql);
-
-    $stmt->bindValue(":user_mail", $user_mail, PDO::PARAM_STR);
+    $stmt->bindValue(":user_mail", $user_mail, PDO::PARAM_INT);
     $result = $stmt->execute();
-    $user = null;
+
+    $User = null;
     if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $id = $row["id"];
-      $user_name = $row["user_name"];
+      $user_id = $row["user_id"];
       $user_login_id = $row["user_login_id"];
-      $user_password = $row["user_password"];
+      $hashed_password = $row["hashed_password"];
+      $user_name = $row["user_name"];
       $user_mail = $row["user_mail"];
       $user_post_code = $row["user_post_code"];
+      $user_address = $row["user_address"];
       $user_phone_number = $row["user_phone_number"];
       $card_number = $row["card_number"];
       $card_key = $row["card_key"];
+      $icon_img = $row["icon_img"];
       $user_state = $row["user_state"];
 
-      $user = new User();
-      $user->setId($id);
-      $user->setUserName($user_name);
-      $user->setUserLoginId($user_login_id);
-      $user->setUserPassword($user_password);
-      $user->setUserMail($user_mail);
-      $user->setUserPostCode($user_post_code);
-      $user->setUserPhoneNumber($user_phone_number);
-      $user->setCardKey($card_number);
-      $user->setUserMail($card_key);
-      $user->setUserState($user_state);
+      $User = new User();
+      $User->setUserId($user_id);
+      $User->setUserLoginId($user_login_id);
+      $User->setHashedPassword($hashed_password);
+      $User->setUserName($user_name);
+      $User->setUserMail($user_mail);
+      $User->setUserPostCode($user_post_code);
+      $User->setUserAddress($user_address);
+      $User->setUserPhoneNumber($user_phone_number);
+      $User->setCardNumber($card_number);
+      $User->setCardKey($card_key);
+      $User->setIconImg($icon_img);
+      $User->setUserState ($user_state);
     }
-    return $user;
+    return $User;
   }
   /**
    * ユーザリスト全取得
@@ -111,22 +144,24 @@ class UserDAO
    */
   public function findAll(): array
   {
-    $sql = "SELECT * FROM user_tbl";
+    $sql = "SELECT * FROM users";
     $stmt = $this->db->prepare($sql);
     $stmt->execute();
     $UserList = [];
     while ($row = $stmt->fetch()) {
       $User = new User();
-      $User->setId($row["id"]);
-      $User->setUserName($row["user_mail"]);
+      $User->setUserId($row["user_id"]);
       $User->setUserLoginId($row["user_login_id"]);
-      $User->setUserPassword($row["user_password"]);
+      $User->setHashedPassword($row["hashed_password"]);
+      $User->setUserName($row["user_name"]);
       $User->setUserMail($row["user_mail"]);
       $User->setUserPostCode($row["user_post_code"]);
+      $User->setUserAddress($row["user_address"]);
       $User->setUserPhoneNumber($row["user_phone_number"]);
       $User->setCardNumber($row["card_number"]);
       $User->setCardKey($row["card_key"]);
-      $User->setUserState($row["user_state"]);
+      $User->setIconImg($row["icon_img"]);
+      $User->setUserState ($row["user_state"]);
       $UserList[$row['id']] = $User;
     }
     return $UserList;
@@ -138,12 +173,19 @@ class UserDAO
    */
   public function insert(User $User): int
   {
-    $sqlInsert = "INSERT INTO user_tbl (user_name,user_login_id,user_password,user_mail,user_post_code, user_phone_number,card_number,card_key) VALUES (:user_name,:user_login_id,:user_password,:user_mail,:user_post_code,: user_phone_number,:card_number,:card_key)";
-    $stmt = $this->db->prepare($sqlInsert);
-    $stmt->bindvalue(':user_name', $User->getUsMail(), PDO::PARAM_STR);
-    $stmt->bindvalue(':user_login_id', $User->getUsName(), PDO::PARAM_STR);
-    $stmt->bindvalue(':user_password', $User->getUsPassword(), PDO::PARAM_STR);
-    $stmt->bindvalue(':user_mail', $User->getUsAuth(), PDO::PARAM_STR);
+    $sql = "INSERT INTO users(user_login_id, hashed_password, user_name, user_mail, user_post_code, user_address, user_phone_number, card_number, card_key, icon_img, user_state) VALUES (:user_login_id, :hashed_password, :user_name, :user_mail, :user_post_code, :user_address, :user_phone_number, :card_number, :card_key, :icon_img, :user_state)";
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':user_login_id', $User->getUserLoginId(), PDO::PARAM_STR);
+    $stmt->bindValue(':hashed_password', $User->getHashedPassword(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_name', $User->getUserName(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_mail', $User->getUserMail(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_post_code', $User->getUserPostCode(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_address', $User->getUserAddress(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_phone_number', $User->getUserPhoneNumber(), PDO::PARAM_INT);
+    $stmt->bindValue(':card_number', $User->getCardNumber(), PDO::PARAM_INT);
+    $stmt->bindValue(':card_key', $User->getCardKey(), PDO::PARAM_INT);
+    $stmt->bindValue(':icon_img', $User->getIconImg(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_state ', $User->getUserState(), PDO::PARAM_INT);
     $result = $stmt->execute();
     if ($result) {
       $UserId = $this->db->lastInsertId();
@@ -159,12 +201,19 @@ class UserDAO
    */
   public function update(User $User): bool
   {
-    $sqlUpdate = " UPDATE Users SET us_mail = :us_mail , us_name = :us_name , us_password = :us_password , = :us_auth WHERE id = :id";
-    $stmt = $this->db->prepare($sqlUpdate);
-    $stmt->bindvalue('us_mail', $User->getUsMail(), PDO::PARAM_STR);
-    $stmt->bindvalue('us_name', $User->getUsName(), PDO::PARAM_STR);
-    $stmt->bindvalue('us_password', $User->getUsPassword(), PDO::PARAM_STR);
-    $stmt->bindvalue('us_auth', $User->getUsAuth(), PDO::PARAM_STR);
+    $sql = "UPDATE users SET user_login_id = :user_login_id,hashed_password = :hashed_password,user_name = :user_name,user_mail = :user_mail,user_post_code = :user_post_code,user_address = :user_address,user_phone_number = :user_phone_number,card_number = :card_number,card_key = :card_key,icon_img = :icon_img,user_state = :user_state WHERE user_id = :user_id;";
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':user_login_id', $User->getUserLoginId(), PDO::PARAM_STR);
+    $stmt->bindValue(':hashed_password', $User->getHashedPassword(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_name', $User->getUserName(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_mail', $User->getUserMail(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_post_code', $User->getUserPostCode(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_address', $User->getUserAddress(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_phone_number', $User->getUserPhoneNumber(), PDO::PARAM_INT);
+    $stmt->bindValue(':card_number', $User->getCardNumber(), PDO::PARAM_INT);
+    $stmt->bindValue(':card_key', $User->getCardKey(), PDO::PARAM_INT);
+    $stmt->bindValue(':icon_img', $User->getIconImg(), PDO::PARAM_STR);
+    $stmt->bindValue(':user_state ', $User->getUserState(), PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }
@@ -173,11 +222,10 @@ class UserDAO
    * @param integer ユーザID
    * @return boolean 登録が成功したかどうか
    */
-  public function delete(int $id): bool
+  public function delete(): bool
   {
-    $sql = "DELETE FROM Users WHERE id = :id";
+    $sql = "DELETE FROM Users";
     $stmt = $this->db->prepare($sql);
-    $stmt->bindValue(":id", $id, PDO::PARAM_INT);
     $result = $stmt->execute();
     return $result;
   }

@@ -22,6 +22,53 @@
       $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
       $this->db = $db;
     }
+    
+    public function collectiveRegistration(Option $Option)
+    {
+      $sql = "INSERT INTO options(product_id, aircon, powerstee, powerwidou, centraldoor, abs, airback, ETC, keyless, smartkey, cd, md, dvd, tv, navi, backcamera, autodoor, sunroof, leather, aero, alumi, esc, tractioncon, coldareas, welfare, lowdown, nosmoking, pet, exclusive, confirmation, instruction, newguarantee, spare) VALUES ";
+      $sql .= "(:product_id ,:aircon ,:powerstee ,:powerwidou ,:centraldoor ,:abs ,:airback ,:ETC ,:keyless ,:smartkey ,:cd ,:md ,:dvd ,:navi ,:backcamera ,:autodoor ,:sunroof ,:leather ,:aero ,:alumi ,:esc ,:tractioncon ,:coldareas ,:welfare ,:lowdown ,:nosmoking ,:pet ,:exclusive ,:confirmation ,:instruction ,:newguarantee ,:spare)";
+      $stmt = $this->db->prepare($sql);
+      for ($i=0; $i < 10; $i++) { 
+        $stmt->bindValue(':product_id', $Option->getProductId(), PDO::PARAM_INT);
+        $stmt->bindValue(':aircon', $Option->getAircon(), PDO::PARAM_INT);
+        $stmt->bindValue(':power_stee', $Option->getPowerstee(), PDO::PARAM_INT);
+        $stmt->bindValue(':power_windou', $Option->getPowerwindou(), PDO::PARAM_INT);
+        $stmt->bindValue(':central_door', $Option->getCentraldoor(), PDO::PARAM_INT);
+        $stmt->bindValue(':abs', $Option->getAbs(), PDO::PARAM_INT);
+        $stmt->bindValue(':airback', $Option->getAirback(), PDO::PARAM_INT);
+        $stmt->bindValue(':ETC', $Option->getEtc(), PDO::PARAM_INT);
+        $stmt->bindValue(':keyless', $Option->getKeyLess(), PDO::PARAM_INT);
+        $stmt->bindValue(':smartkey', $Option->getSmartKey(), PDO::PARAM_INT);
+        $stmt->bindValue(':cd', $Option->getCd(), PDO::PARAM_INT);
+        $stmt->bindValue(':md', $Option->getSmartKey(), PDO::PARAM_INT);
+        $stmt->bindValue(':dvd', $Option->getDvd(), PDO::PARAM_INT);
+        $stmt->bindValue(':navi', $Option->getNavi(), PDO::PARAM_INT);
+        $stmt->bindValue(':backcamera', $Option->getBackcamera(), PDO::PARAM_INT);
+        $stmt->bindValue(':autodoor', $Option->getAutodoor(), PDO::PARAM_INT);
+        $stmt->bindValue(':sunroof', $Option->getSunroof(), PDO::PARAM_INT);
+        $stmt->bindValue(':leather', $Option->getLeather(), PDO::PARAM_INT);
+        $stmt->bindValue(':aero', $Option->getAero(), PDO::PARAM_INT);
+        $stmt->bindValue(':alumi', $Option->getAlumi(), PDO::PARAM_INT);
+        $stmt->bindValue(':esc', $Option->getEsc(), PDO::PARAM_INT);
+        $stmt->bindValue(':tractioncon', $Option->getTractioncon(), PDO::PARAM_INT);
+        $stmt->bindValue(':welfare', $Option->getWelfare(), PDO::PARAM_INT);
+        $stmt->bindValue(':lowdown', $Option->getLowdown(), PDO::PARAM_INT);
+        $stmt->bindValue(':nosmoking', $Option->getNosmoking(), PDO::PARAM_INT);
+        $stmt->bindValue(':pet', $Option->getPet(), PDO::PARAM_INT);
+        $stmt->bindValue(':exclusive', $Option->getExclusive(), PDO::PARAM_INT);
+        $stmt->bindValue(':confirmation', $Option->getConfirmation(), PDO::PARAM_INT);
+        $stmt->bindValue(':instruction', $Option->getInstruction(), PDO::PARAM_INT);
+        $stmt->bindValue(':newguarantee', $Option->getNewguarantee(), PDO::PARAM_INT);
+        $stmt->bindValue(':spare', $Option->getSpare(), PDO::PARAM_INT);
+          $result = $stmt->execute();
+      }
+      if ($result) {
+        $carId = $this->db->lastInsertId();
+      } else {
+        $carId = -1;
+      }
+      return $carId;
+    }
 
     /**
      * optionIdによる検索。
@@ -31,22 +78,21 @@
      */
     public function findByOpitonId(int $optionId): ?optionDAO
     {
-      $sql = "SELECT * FROM option_tbl WHERE option_id = :optionId";
+      $sql = "SELECT * FROM options WHERE option_id = :optionId";
       $stmt = $this->db->prepare($sql);
 
-      $stmt->bindValue(":optionId", $optionId, PDO::PARAM_STR);
+      $stmt->bindValue(":optionId", $optionId, PDO::PARAM_INT);
       $result = $stmt->execute();
       $user = null;
       if ($result && $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $option_id = $row["option_id"];
+        $product_id = $row["product_id"];
         $aircon = $row["aircon"];
         $powerstee = $row["powerstee"];
         $powerwindou = $row["powerwindou"];
-        $central_door = $row["centraldoor"];
-        $abs = $row["abs"];
+        $centraldoor = $row["centraldoor"];
         $abs = $row["abs"];
         $airback = $row["airback"];
-        $etc = $row["etc"];
+        $etc = $row["ETC"];
         $keyless = $row["keyless"];
         $smartkey = $row["smartkey"];
         $cd = $row["cd"];
@@ -74,11 +120,11 @@
         $spare = $row["spare"];
 
         $Option = new Option();
-        $Option->setId($option_id);
+        $Option->setProductId($product_id);
         $Option->setAircon($aircon);
         $Option->setPowerstee($powerstee);
-        $Option->setPowerstee($powerwindou);
-        $Option->setCentraldoor($central_door);
+        $Option->setPowerwindou($powerwindou);
+        $Option->setCentraldoor($centraldoor);
         $Option->setAbs($abs);
         $Option->setAirback($airback);
         $Option->setEtc($etc);
@@ -116,13 +162,13 @@
      */
     public function findAll():array
     {
-      $sql = "SELECT * FROM option_tbl";
+      $sql = "SELECT * FROM options";
       $stmt = $this->db->prepare($sql);
       $result = $stmt->execute();
       $product_list = [];
       while($row = $stmt->fetch()) {
         $Option = new Option();
-        $Option->getId($row["product_id"]);
+        $Option->getProductId($row["product_id"]);
         $Option->getAircon($row["aircon"]);
         $Option->getPowerstee($row["powerstee"]);
         $Option->getPowerwindou($row["powerwindou"]);
@@ -166,40 +212,40 @@
      */
     public function insert(Option $Option): bool
     {
-      $sql_insert = "INSERT INTO option_tbl(product_id, aircon, powerstee, powerwidou, centraldoor, abs, airback, ETC, keyless, smartkey, cd, md, dvd, tv, navi, backcamera, autodoor, sunroof, leather, aero, alumi, esc, tractioncon, coldareas, welfare, lowdown, nosmoking, pet, exclusive, confirmation, instruction, newguarantee, spare) VALUES ";
-      $sql_insert .= "(:product_id ,:aircon ,:powerstee ,:powerwidou ,:centraldoor ,:abs ,:airback ,:ETC ,:keyless ,:smartkey ,:cd ,:md ,:dvd ,:navi ,:backcamera ,:autodoor ,:sunroof ,:leather ,:aero ,:alumi ,:esc ,:tractioncon ,:coldareas ,:welfare ,:lowdown ,:nosmoking ,:pet ,:exclusive ,:confirmation ,:instruction ,:newguarantee ,:spare)";
-      $stmt = $this->db->prepare($sql_insert);
-      $stmt->bindValue(':product_id', $Option->getId(), PDO::PARAM_STR);
-      $stmt->bindValue(':aircon', $Option->getAircon(), PDO::PARAM_STR);
-      $stmt->bindValue(':power_stee', $Option->getPowerstee(), PDO::PARAM_STR);
-      $stmt->bindValue(':power_windou', $Option->getPowerwindou(), PDO::PARAM_STR);
-      $stmt->bindValue(':central_door', $Option->getCentraldoor(), PDO::PARAM_STR);
-      $stmt->bindValue(':abs', $Option->getAbs(), PDO::PARAM_STR);
-      $stmt->bindValue(':airback', $Option->getAirback(), PDO::PARAM_STR);
-      $stmt->bindValue(':ETC', $Option->getEtc(), PDO::PARAM_STR);
-      $stmt->bindValue(':keyless', $Option->getKeyLess(), PDO::PARAM_STR);
-      $stmt->bindValue(':smartkey', $Option->getSmartKey(), PDO::PARAM_STR);
-      $stmt->bindValue(':cd', $Option->getCd(), PDO::PARAM_STR);
-      $stmt->bindValue(':md', $Option->getSmartKey(), PDO::PARAM_STR);
-      $stmt->bindValue(':dvd', $Option->getDvd(), PDO::PARAM_STR);
-      $stmt->bindValue(':navi', $Option->getNavi(), PDO::PARAM_STR);
-      $stmt->bindValue(':backcamera', $Option->getBackcamera(), PDO::PARAM_STR);
-      $stmt->bindValue(':autodoor', $Option->getAutodoor(), PDO::PARAM_STR);
-      $stmt->bindValue(':sunroof', $Option->getSunroof(), PDO::PARAM_STR);
-      $stmt->bindValue(':leather', $Option->getLeather(), PDO::PARAM_STR);
-      $stmt->bindValue(':aero', $Option->getAero(), PDO::PARAM_STR);
-      $stmt->bindValue(':alumi', $Option->getAlumi(), PDO::PARAM_STR);
-      $stmt->bindValue(':esc', $Option->getEsc(), PDO::PARAM_STR);
-      $stmt->bindValue(':tractioncon', $Option->getTractioncon(), PDO::PARAM_STR);
-      $stmt->bindValue(':welfare', $Option->getWelfare(), PDO::PARAM_STR);
-      $stmt->bindValue(':lowdown', $Option->getLowdown(), PDO::PARAM_STR);
-      $stmt->bindValue(':nosmoking', $Option->getNosmoking(), PDO::PARAM_STR);
-      $stmt->bindValue(':pet', $Option->getPet(), PDO::PARAM_STR);
-      $stmt->bindValue(':exclusive', $Option->getExclusive(), PDO::PARAM_STR);
-      $stmt->bindValue(':confirmation', $Option->getConfirmation(), PDO::PARAM_STR);
-      $stmt->bindValue(':instruction', $Option->getInstruction(), PDO::PARAM_STR);
-      $stmt->bindValue(':newguarantee', $Option->getNewguarantee(), PDO::PARAM_STR);
-      $stmt->bindValue(':spare', $Option->getSpare(), PDO::PARAM_STR);
+      $sql = "INSERT INTO options(product_id, aircon, powerstee, powerwidou, centraldoor, abs, airback, ETC, keyless, smartkey, cd, md, dvd, tv, navi, backcamera, autodoor, sunroof, leather, aero, alumi, esc, tractioncon, coldareas, welfare, lowdown, nosmoking, pet, exclusive, confirmation, instruction, newguarantee, spare) VALUES ";
+      $sql .= "(:product_id ,:aircon ,:powerstee ,:powerwidou ,:centraldoor ,:abs ,:airback ,:ETC ,:keyless ,:smartkey ,:cd ,:md ,:dvd ,:navi ,:backcamera ,:autodoor ,:sunroof ,:leather ,:aero ,:alumi ,:esc ,:tractioncon ,:coldareas ,:welfare ,:lowdown ,:nosmoking ,:pet ,:exclusive ,:confirmation ,:instruction ,:newguarantee ,:spare)";
+      $stmt = $this->db->prepare($sql);
+      $stmt->bindValue(':product_id', $Option->getProductId(), PDO::PARAM_INT);
+      $stmt->bindValue(':aircon', $Option->getAircon(), PDO::PARAM_INT);
+      $stmt->bindValue(':power_stee', $Option->getPowerstee(), PDO::PARAM_INT);
+      $stmt->bindValue(':power_windou', $Option->getPowerwindou(), PDO::PARAM_INT);
+      $stmt->bindValue(':central_door', $Option->getCentraldoor(), PDO::PARAM_INT);
+      $stmt->bindValue(':abs', $Option->getAbs(), PDO::PARAM_INT);
+      $stmt->bindValue(':airback', $Option->getAirback(), PDO::PARAM_INT);
+      $stmt->bindValue(':ETC', $Option->getEtc(), PDO::PARAM_INT);
+      $stmt->bindValue(':keyless', $Option->getKeyLess(), PDO::PARAM_INT);
+      $stmt->bindValue(':smartkey', $Option->getSmartKey(), PDO::PARAM_INT);
+      $stmt->bindValue(':cd', $Option->getCd(), PDO::PARAM_INT);
+      $stmt->bindValue(':md', $Option->getSmartKey(), PDO::PARAM_INT);
+      $stmt->bindValue(':dvd', $Option->getDvd(), PDO::PARAM_INT);
+      $stmt->bindValue(':navi', $Option->getNavi(), PDO::PARAM_INT);
+      $stmt->bindValue(':backcamera', $Option->getBackcamera(), PDO::PARAM_INT);
+      $stmt->bindValue(':autodoor', $Option->getAutodoor(), PDO::PARAM_INT);
+      $stmt->bindValue(':sunroof', $Option->getSunroof(), PDO::PARAM_INT);
+      $stmt->bindValue(':leather', $Option->getLeather(), PDO::PARAM_INT);
+      $stmt->bindValue(':aero', $Option->getAero(), PDO::PARAM_INT);
+      $stmt->bindValue(':alumi', $Option->getAlumi(), PDO::PARAM_INT);
+      $stmt->bindValue(':esc', $Option->getEsc(), PDO::PARAM_INT);
+      $stmt->bindValue(':tractioncon', $Option->getTractioncon(), PDO::PARAM_INT);
+      $stmt->bindValue(':welfare', $Option->getWelfare(), PDO::PARAM_INT);
+      $stmt->bindValue(':lowdown', $Option->getLowdown(), PDO::PARAM_INT);
+      $stmt->bindValue(':nosmoking', $Option->getNosmoking(), PDO::PARAM_INT);
+      $stmt->bindValue(':pet', $Option->getPet(), PDO::PARAM_INT);
+      $stmt->bindValue(':exclusive', $Option->getExclusive(), PDO::PARAM_INT);
+      $stmt->bindValue(':confirmation', $Option->getConfirmation(), PDO::PARAM_INT);
+      $stmt->bindValue(':instruction', $Option->getInstruction(), PDO::PARAM_INT);
+      $stmt->bindValue(':newguarantee', $Option->getNewguarantee(), PDO::PARAM_INT);
+      $stmt->bindValue(':spare', $Option->getSpare(), PDO::PARAM_INT);
       $result = $stmt->execute();
       if ($result) {
         $option_id = $this->db->lastInsertId();
@@ -215,40 +261,40 @@
      */
     public function update(Option $Option) :bool
     {
-      $sql_update = "UPDATE option_tbl SET aircon=:aircon,powerstee=:powerstee,powerwidou=:powerwidou,centraldoor=:centraldoor,abs=:abs,airback=:airback,ETC=:ETC,keyless=:keyless,smartkey=:smartkey,cd=:cd,md=:md,dvd=:dvd,tv=:tv,navi=:navi,backcamera=:backcamera,autodoor=:autodoor,sunroof=:sunroof,leather=:leather,aero=:aero,alumi=:alumi,esc=:esc,tractioncon=:tractioncon,coldareas=:coldareas,welfare=:welfare,lowdown=:lowdown,nosmoking=:nosmoking,pet=:pet,exclusive=:exclusive,confirmation=:confirmation,instruction=:instruction,newguarantee=:newguarantee,spare=:spare WHERE option_id = :option_id";
-      $stmt = $this->db->prepare($sql_update);
-      $stmt->bindValue(':product_id', $Option->getId(), PDO::PARAM_STR);
-      $stmt->bindValue(':aircon', $Option->getAircon(), PDO::PARAM_STR);
-      $stmt->bindValue(':power_stee', $Option->getPowerstee(), PDO::PARAM_STR);
-      $stmt->bindValue(':power_windou', $Option->getPowerwindou(), PDO::PARAM_STR);
-      $stmt->bindValue(':central_door', $Option->getCentraldoor(), PDO::PARAM_STR);
-      $stmt->bindValue(':abs', $Option->getAbs(), PDO::PARAM_STR);
-      $stmt->bindValue(':airback', $Option->getAirback(), PDO::PARAM_STR);
-      $stmt->bindValue(':ETC', $Option->getEtc(), PDO::PARAM_STR);
-      $stmt->bindValue(':keyless', $Option->getKeyLess(), PDO::PARAM_STR);
-      $stmt->bindValue(':smartkey', $Option->getSmartKey(), PDO::PARAM_STR);
-      $stmt->bindValue(':cd', $Option->getCd(), PDO::PARAM_STR);
-      $stmt->bindValue(':md', $Option->getSmartKey(), PDO::PARAM_STR);
-      $stmt->bindValue(':dvd', $Option->getDvd(), PDO::PARAM_STR);
-      $stmt->bindValue(':navi', $Option->getNavi(), PDO::PARAM_STR);
-      $stmt->bindValue(':backcamera', $Option->getBackcamera(), PDO::PARAM_STR);
-      $stmt->bindValue(':autodoor', $Option->getAutodoor(), PDO::PARAM_STR);
-      $stmt->bindValue(':sunroof', $Option->getSunroof(), PDO::PARAM_STR);
-      $stmt->bindValue(':leather', $Option->getLeather(), PDO::PARAM_STR);
-      $stmt->bindValue(':aero', $Option->getAero(), PDO::PARAM_STR);
-      $stmt->bindValue(':alumi', $Option->getAlumi(), PDO::PARAM_STR);
-      $stmt->bindValue(':esc', $Option->getEsc(), PDO::PARAM_STR);
-      $stmt->bindValue(':tractioncon', $Option->getTractioncon(), PDO::PARAM_STR);
-      $stmt->bindValue(':welfare', $Option->getWelfare(), PDO::PARAM_STR);
-      $stmt->bindValue(':lowdown', $Option->getLowdown(), PDO::PARAM_STR);
-      $stmt->bindValue(':nosmoking', $Option->getNosmoking(), PDO::PARAM_STR);
-      $stmt->bindValue(':pet', $Option->getPet(), PDO::PARAM_STR);
-      $stmt->bindValue(':exclusive', $Option->getExclusive(), PDO::PARAM_STR);
-      $stmt->bindValue(':confirmation', $Option->getConfirmation(), PDO::PARAM_STR);
-      $stmt->bindValue(':instruction', $Option->getInstruction(), PDO::PARAM_STR);
-      $stmt->bindValue(':newguarantee', $Option->getNewguarantee(), PDO::PARAM_STR);
-      $stmt->bindValue(':spare', $Option->getSpare(), PDO::PARAM_STR);
-      $stmt->bindValue(':product_id', $Option->getId(), PDO::PARAM_STR);
+      $sql = "UPDATE options SET aircon=:aircon,powerstee=:powerstee,powerwidou=:powerwidou,centraldoor=:centraldoor,abs=:abs,airback=:airback,ETC=:ETC,keyless=:keyless,smartkey=:smartkey,cd=:cd,md=:md,dvd=:dvd,tv=:tv,navi=:navi,backcamera=:backcamera,autodoor=:autodoor,sunroof=:sunroof,leather=:leather,aero=:aero,alumi=:alumi,esc=:esc,tractioncon=:tractioncon,coldareas=:coldareas,welfare=:welfare,lowdown=:lowdown,nosmoking=:nosmoking,pet=:pet,exclusive=:exclusive,confirmation=:confirmation,instruction=:instruction,newguarantee=:newguarantee,spare=:spare WHERE option_id = :option_id";
+      $stmt = $this->db->prepare($sql);
+      $stmt->bindValue(':product_id', $Option->getProductId(), PDO::PARAM_INT);
+      $stmt->bindValue(':aircon', $Option->getAircon(), PDO::PARAM_INT);
+      $stmt->bindValue(':power_stee', $Option->getPowerstee(), PDO::PARAM_INT);
+      $stmt->bindValue(':power_windou', $Option->getPowerwindou(), PDO::PARAM_INT);
+      $stmt->bindValue(':central_door', $Option->getCentraldoor(), PDO::PARAM_INT);
+      $stmt->bindValue(':abs', $Option->getAbs(), PDO::PARAM_INT);
+      $stmt->bindValue(':airback', $Option->getAirback(), PDO::PARAM_INT);
+      $stmt->bindValue(':ETC', $Option->getEtc(), PDO::PARAM_INT);
+      $stmt->bindValue(':keyless', $Option->getKeyLess(), PDO::PARAM_INT);
+      $stmt->bindValue(':smartkey', $Option->getSmartKey(), PDO::PARAM_INT);
+      $stmt->bindValue(':cd', $Option->getCd(), PDO::PARAM_INT);
+      $stmt->bindValue(':md', $Option->getSmartKey(), PDO::PARAM_INT);
+      $stmt->bindValue(':dvd', $Option->getDvd(), PDO::PARAM_INT);
+      $stmt->bindValue(':navi', $Option->getNavi(), PDO::PARAM_INT);
+      $stmt->bindValue(':backcamera', $Option->getBackcamera(), PDO::PARAM_INT);
+      $stmt->bindValue(':autodoor', $Option->getAutodoor(), PDO::PARAM_INT);
+      $stmt->bindValue(':sunroof', $Option->getSunroof(), PDO::PARAM_INT);
+      $stmt->bindValue(':leather', $Option->getLeather(), PDO::PARAM_INT);
+      $stmt->bindValue(':aero', $Option->getAero(), PDO::PARAM_INT);
+      $stmt->bindValue(':alumi', $Option->getAlumi(), PDO::PARAM_INT);
+      $stmt->bindValue(':esc', $Option->getEsc(), PDO::PARAM_INT);
+      $stmt->bindValue(':tractioncon', $Option->getTractioncon(), PDO::PARAM_INT);
+      $stmt->bindValue(':welfare', $Option->getWelfare(), PDO::PARAM_INT);
+      $stmt->bindValue(':lowdown', $Option->getLowdown(), PDO::PARAM_INT);
+      $stmt->bindValue(':nosmoking', $Option->getNosmoking(), PDO::PARAM_INT);
+      $stmt->bindValue(':pet', $Option->getPet(), PDO::PARAM_INT);
+      $stmt->bindValue(':exclusive', $Option->getExclusive(), PDO::PARAM_INT);
+      $stmt->bindValue(':confirmation', $Option->getConfirmation(), PDO::PARAM_INT);
+      $stmt->bindValue(':instruction', $Option->getInstruction(), PDO::PARAM_INT);
+      $stmt->bindValue(':newguarantee', $Option->getNewguarantee(), PDO::PARAM_INT);
+      $stmt->bindValue(':spare', $Option->getSpare(), PDO::PARAM_INT);
+      $stmt->bindValue(':product_id', $Option->getProductId(), PDO::PARAM_INT);
       $result = $stmt->execute();
       return $result;
     }
@@ -259,9 +305,9 @@
      */
     public function delete(int $id): bool
     {
-      $sql = "DELETE FROM option_tbl WHERE id=:id";
+      $sql = "DELETE FROM options WHERE product_id=:product_id";
       $stmt = $this->db->prepare($sql);
-      $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+      $stmt->bindValue(":product_id", $id, PDO::PARAM_INT);
       $result = $stmt->execute();
       return $result;
     }
