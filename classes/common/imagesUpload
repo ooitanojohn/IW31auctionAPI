@@ -1,0 +1,170 @@
+<?php 
+$err=[];
+if(isset($_SESSION['groupinfo_id'])){
+//投稿するボタンがクリックされた時の処理
+if(isset($_POST['up'])){
+    //メッセージの入力値チェック
+    if($_POST['msg']==''){
+        $err['msg']="未入力です";
+    }
+    else{
+        $msg = $_POST['msg'];
+    }
+    //$errに何も入っていないときの処理
+    if (empty($err)) {
+        //ファイルが選択されているときの処理
+        if($_FILES['upload_file']['error'][0] != 4){
+        
+        //ファイルがあれば処理続行
+        $array0 = $_FILES["upload_file"]["name"];
+        $array = array_filter($array0);//空の配列要素を削除
+
+        $sql = "SELECT group_id FROM h_groupinfo WHERE groupinfo_id = " . $_SESSION['post'] . " AND `dele_date` IS null";
+        $post_groupid = select(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+        if($post_groupid == false){
+            $post_groupid = '';
+        }
+        $posted_date = date("Y-m-d H:i:s", time());//日付取得
+​
+        //h_postに投稿されたメッセージ、投稿したユーザーID、投稿した日時、グループIDを挿入
+        $sql = "INSERT INTO `h_post` (`user_id`, `group_id`, `posted_date`, `message`) VALUES ('".$list_user['user_id']."','".$post_groupid['group_id']."','".$posted_date."','".$msg."')";
+        $post_id = id(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+​
+        //アップロードされたファイル件数を取得&ファイル毎の処理実行
+        for($i=0;$i<count($array);$i++){
+            //画像を格納するフォルダを指定
+            $gr = $post_groupid['group_id'];
+            $directory_path = "image/group/$gr";
+            //画像フォルダを作成
+            if(file_exists($directory_path)){
+            }else{
+                if(mkdir($directory_path,0777)){
+                    chmod($directory_path,0777);
+                }
+            }
+​
+            // $directory_path = "$directory_path0/$post_id";
+            // //画像フォルダを作成
+            // if(file_exists($directory_path)){
+            // }else{
+            //     if(mkdir($directory_path,0777)){
+            //         chmod($directory_path,0777);
+            //     }
+            // }
+            //◎画像サイズを取得
+            $img_size[] = getimagesize($_FILES['upload_file']['tmp_name'][$i]);
+            
+​
+            if($img_size[$i][0] > 150 || $img_size[$i][1] > 150){
+                //ファイルサイズを縮小
+                if($img_size[$i][0]/150 >= $img_size[$i][1]/150){
+                    $width = $img_size[$i][0] * (150/$img_size[$i][0]);
+                    $height = (150/$img_size[$i][0]) * $img_size[$i][1];
+                }else{
+                    $width = $img_size[$i][0] * (150/$img_size[$i][1]);
+                    $height = (150/$img_size[$i][1]) * $img_size[$i][1];
+                }    
+            }else{
+                $width = $img_size[$i][0];
+                $height = $img_size[$i][1];
+            }
+​
+            if($img_size[$i][0] > 300 || $img_size[$i][1] > 300){
+                //ファイルサイズを縮小
+                if($img_size[$i][0]/300 >= $img_size[$i][1]/300){
+                    $width1 = $img_size[$i][0] * (300/$img_size[$i][0]);
+                    $height1 = (300/$img_size[$i][0]) * $img_size[$i][1];
+                }else{
+                    $width1 = $img_size[$i][0] * (300/$img_size[$i][1]);
+                    $height1 = (300/$img_size[$i][1]) * $img_size[$i][1];
+                }    
+            }else{
+                $width1 = $img_size[$i][0];
+                $height1 = $img_size[$i][1];
+            }
+            $shooting_date = date("Y-m-d", time());//日付取得   
+            
+            //gif
+            if($img_size[$i][2] == 1){
+                //h_imgに投稿したグループID、投稿したゆーざID 、img_name（選択された写真を全挿入）,shooting_date、post_idを挿入
+                $sql = "INSERT INTO `h_img` (`user_id`, `group_id`, `shooting_date`,`post_id`) VALUES ('".$list_user['user_id']."','".$post_groupid['group_id']."','".$shooting_date."','".$post_id."')";
+                $img_id = id(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+​
+                $sql = "UPDATE `h_img` SET `img_name` = '".$img_id.".gif' WHERE img_id=".$img_id."";
+                sel(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+​
+                //日本語ファイル対応
+                //日本語ファイルはwindowsで扱う場合、sjisに変換する(文字コードを変換したいファイル,変換後のコード,変換前のコード)
+                $file_name = mb_convert_encoding($directory_path.'/'. 'image_'.$img_id . '.gif' , 'sjis','utf8');
+                move_uploaded_file($_FILES['upload_file']['tmp_name'][$i],$file_name);
+                $img_in=imagecreatefromgif($file_name);
+                $img_out=ImageCreateTruecolor($width,$height);
+                ImageCopyResampled($img_out,$img_in,0,0,0,0,$width,$height,$img_size[$i][0],$img_size[$i][1]);
+                Imagegif($img_out,$directory_path.'/' . $img_id . '.gif');
+​
+                //サムネイル
+                $img_out=ImageCreateTruecolor($width1,$height1);
+                ImageCopyResampled($img_out,$img_in,0,0,0,0,$width1,$height1,$img_size[$i][0],$img_size[$i][1]);
+                Imagegif($img_out,$directory_path.'/img_' . $img_id . '.gif');
+            }
+            //jpg
+            if($img_size[$i][2] == 2){
+                //h_imgに投稿したグループID、投稿したゆーざID 、img_name（選択された写真を全挿入）,shooting_date、post_idを挿入
+                $sql = "INSERT INTO `h_img` (`user_id`, `group_id`, `shooting_date`,`post_id`) VALUES ('".$list_user['user_id']."','".$post_groupid['group_id']."','".$shooting_date."','".$post_id."')";
+                $img_id = id(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+​
+                $sql = "UPDATE `h_img` SET `img_name` = '".$img_id.".jpg' WHERE img_id=".$img_id."";
+                sel(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+                //日本語ファイル対応
+                //日本語ファイルはwindowsで扱う場合、sjisに変換する(文字コードを変換したいファイル,変換後のコード,変換前のコード)
+                $file_name = mb_convert_encoding($directory_path.'/'. 'image_'.$img_id . '.jpg' , 'sjis','utf8');
+                move_uploaded_file($_FILES['upload_file']['tmp_name'][$i],$file_name);
+                $img_in=imagecreatefromjpeg($file_name);
+                $img_out=ImageCreateTruecolor($width,$height);
+                ImageCopyResampled($img_out,$img_in,0,0,0,0,$width,$height,$img_size[$i][0],$img_size[$i][1]);
+                Imagejpeg($img_out,$directory_path.'/' . $img_id . '.jpg');
+​
+                //サムネイル
+                $img_out=ImageCreateTruecolor($width1,$height1);
+                ImageCopyResampled($img_out,$img_in,0,0,0,0,$width1,$height1,$img_size[$i][0],$img_size[$i][1]);
+                Imagegif($img_out,$directory_path.'/img_' . $img_id . '.jpg');
+            }
+            //png
+            if($img_size[$i][2] == 3){
+                //h_imgに投稿したグループID、投稿したゆーざID 、img_name（選択された写真を全挿入）,shooting_date、post_idを挿入
+                $sql = "INSERT INTO `h_img` (`user_id`, `group_id`, `shooting_date`,`post_id`) VALUES ('".$list_user['user_id']."','".$post_groupid['group_id']."','".$shooting_date."','".$post_id."')";
+                $img_id = id(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+​
+                $sql = "UPDATE `h_img` SET `img_name` = '".$img_id.".png' WHERE img_id=".$img_id."";
+                sel(HOST,USER_ID,PASSWORD,DB_NAME,$sql);
+                //日本語ファイル対応
+                //日本語ファイルはwindowsで扱う場合、sjisに変換する(文字コードを変換したいファイル,変換後のコード,変換前のコード)
+                $file_name = mb_convert_encoding($directory_path.'/'. 'image_'.$img_id . '.png' , 'sjis','utf8');
+                move_uploaded_file($_FILES['upload_file']['tmp_name'][$i],$file_name);
+                $img_in=imagecreatefrompng($file_name);
+                $img_out=ImageCreateTruecolor($width,$height);
+                // imagealphablending($img_out, false);
+                // imagesavealpha($img_out, true);
+                ImageCopyResampled($img_out,$img_in,0,0,0,0,$width,$height,$img_size[$i][0],$img_size[$i][1]);
+                Imagepng($img_out,$directory_path.'/' . $img_id . '.png');
+​
+                //サムネイル
+                $img_out=ImageCreateTruecolor($width1,$height1);
+                ImageCopyResampled($img_out,$img_in,0,0,0,0,$width1,$height1,$img_size[$i][0],$img_size[$i][1]);
+                Imagegif($img_out,$directory_path.'/img_' . $img_id . '.png');
+            }
+        }
+        //h_imgに値を追加
+        
+        // $_SESSION['groupinfo_id'] = $_SESSION['post'];
+        header('location: index.php');
+        exit;
+        }
+    }
+    // header('location:index.php');
+    // exit;   
+}
+}else{
+    $err['post'] = 'グループを作成後、投稿をしてください';
+}
+// require_once("tpl/post.php");
