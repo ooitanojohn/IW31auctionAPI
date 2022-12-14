@@ -4,113 +4,113 @@ namespace Classes\Entities;
 
 class User
 {
-  // 主キーのid
-  private ?int $id = null;
-  // メールアドレス
-  private ?string $user_name = "";
-  // 名前
+  private ?int $user_id = null;
   private ?string $user_login_id = "";
-  // パスワード
-  private ?string $user_password = "";
-  // メール
+  private ?string $hashed_password = "";
+  private ?string $user_name = "";
   private ?string $user_mail = "";
-  // 郵便番号
-  private ?int $user_post_code = null;
-  // 携帯番号
+  private ?string $user_post_code = "";
+  private ?string $user_address = "";
   private ?int $user_phone_number = null;
-  // クレカ番号
   private ?int $card_number = null;
-  // カードキー
   private ?int $card_key = null;
-  //　耐怪情報
+  private ?string $icon_img = "";
   private ?int $user_state = null;
-
+  
   // アクセサメソッド
-  public function getId(): ?int
+  public function getUserId()
   {
-    return $this->id;
+    return $this->user_id;
   }
-  public function setId(int $id): void
-  {
-    $this->id = $id;
-  }
-  public function getUserName(): ?string
-  {
-    return $this->user_name;
-  }
-  public function setUserName(string $user_name): void
-  {
-    $this->user_name = $user_name;
-  }
-  public function getUserLoginId(): ?string
+  public function getUserLoginId()
   {
     return $this->user_login_id;
   }
-  public function setUserLoginId(string $user_login_id): void
+  public function getHashedPassword()
   {
-    $this->user_login_id = $user_login_id;
+    return $this->hashed_password;
   }
-  public function getUserPassword(): ?string
+  public function getUserName()
   {
-    return $this->user_password;
+    return $this->user_name;
   }
-  public function setUserPassword(string $user_password): void
-  {
-    $this->user_password = $user_password;
-  }
-  public function getUserMail(): ?string
+  public function getUserMail()
   {
     return $this->user_mail;
   }
-  public function setUserMail(string $user_mail): void
-  {
-    $this->user_mail = $user_mail;
-  }
-  public function getUserPostCode(): ?int
+  public function getUserPostCode()
   {
     return $this->user_post_code;
   }
-  public function setUserPostCode(int $user_post_code): void
-  {
-    $this->user_post_code = $user_post_code;
-  }
-  public function getUserAddress(): ?string
+  public function getUserAddress()
   {
     return $this->user_address;
   }
-  public function setUserAddress(string $user_address): void
-  {
-    $this->user_address = $user_address;
-  }
-  public function getUserPhoneNumber(): ?int
+  public function getUserPhoneNumber()
   {
     return $this->user_phone_number;
   }
-  public function setUserPhoneNumber(int $user_phone_number): void
-  {
-    $this->user_phone_number = $user_phone_number;
-  }
-  public function getCardNumber(): ?int
+  public function getCardNumber()
   {
     return $this->card_number;
   }
-  public function setCardNumber(int $card_number): void
-  {
-    $this->card_number = $card_number;
-  }
-  public function getCardKey(): ?int
+  public function getCardKey()
   {
     return $this->card_key;
   }
-  public function setCardKey(int $card_key): void
+  public function getIconImg()
   {
-    $this->card_key = $card_key;
+    return $this->icon_img;
   }
-  public function getUserState(): ?int
+  public function getUserState()
   {
     return $this->user_state;
   }
-  public function setUserState(int $user_state): void
+  public function setUserId($user_id)
+  {
+    $this->user_id = $user_id;
+  }
+  public function setUserLoginId($user_login_id)
+  {
+    $this->user_login_id = $user_login_id;
+  }
+  public function setHashedPassword($hashed_password)
+  {
+    $this->hashed_password = $hashed_password;
+  }
+  public function setUserName($user_name)
+  {
+    $this->user_name = $user_name;
+  }
+  public function setUserMail($user_mail)
+  {
+    $this->user_mail = $user_mail;
+  }
+  public function setUserPostCode($user_post_code)
+  {
+    $this->user_post_code = $user_post_code;
+  }
+  public function setUserAddress($user_address)
+  {
+    $this->user_address = $user_address;
+  }
+  public function setUserPhoneNumber($user_phone_number)
+  {
+    $this->user_phone_number = $user_phone_number;
+  }
+  public function setCardNumber($card_number)
+  {
+    $this->card_number = $card_number;
+  }
+  public function setCardKey($card_key)
+  {
+    $this->card_key = $card_key;
+  }
+  public function setIconImg($icon_img)
+  {
+    $this->icon_img = $icon_img;
+  }
+  public function setUserState($user_state)
   {
     $this->user_state = $user_state;
   }

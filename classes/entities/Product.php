@@ -3,97 +3,105 @@
 namespace Classes\Entities;
 
 class Product {
-  // 商品の主キーのid
-  private ?int $id = null;
-  // 車のid
+  private ?int $product_id = null;
   private ?int $car_id = null;
-  // 車の金額
-  private ?int $car_price = null;
-  // 
+  private ?int $stock_id = null;
   private ?int $start_price = null;
-  // 
   private ?int $asking_price = null;
-  // 
-  private ?string $exhibit_date = "";
-  // 
-  private ?string $purchase_date = "";
-  // 商品の購入日
+  private ?string $start_time = "";
+  private ?string $end_time = "";
   private ?int $user_id = null;
-  // 車の状態
-  private ?int $car_condition = null;
+  private ?string $car_img = "";
+  private ?int $product_state = null;
+  private ?string $update_time = "";
 
-  // アクセサメソッド
-  public function getId(): ?int
+  public function getProductId()
   {
-    return $this->id;
+    return $this->product_id;
   }
-  public function setId(int $id): void
-  {
-    $this->id = $id;
-  }  
-  public function getCarId(): ?int
+  public function getCarId()
   {
     return $this->car_id;
   }
-  public function setCarId(int $car_id): void
+  public function getStockId()
   {
-    $this->car_id = $car_id;
+    return $this->stock_id;
   }
-  public function getCarPrice(): ?int
-  {
-    return $this->car_price;
-  }
-  public function setCarPrice(int $car_price): void
-  {
-    $this->car_price = $car_price;
-  }
-  public function getStartPrice(): ?int
+  public function getStartPrice()
   {
     return $this->start_price;
   }
-  public function setStartPrice(int $start_price): void
-  {
-    $this->start_price = $start_price;
-  }
-  public function getAskingPrice(): ?int
+  public function getAskingPrice()
   {
     return $this->asking_price;
   }
-  public function setAskingPrice(int $asking_price): void
+  public function getStartTime()
   {
-    $this->asking_price = $asking_price;
+    return $this->start_time;
   }
-  public function getExhibitDate(): ?string
+  public function getEndTime()
   {
-    return $this->exhibit_date;
+    return $this->end_time;
   }
-  public function setExhibitDate(int $exhibit_date): void
-  {
-    $this->exhibit_price = $exhibit_date;
-  }
-  public function getPurchaseDate(): ?string
-  {
-    return $this->purchase_date;
-  }
-  public function setPurchaseDate(int $purchase_date): void
-  {
-    $this->purchase_date = $purchase_date;
-  }
-  public function getUserId(): ?int
+  public function getUserId()
   {
     return $this->user_id;
   }
-  public function setUserId(int $user_id): void
+  public function getCarImg()
+  {
+    return $this->car_img;
+  }
+  public function getProductState()
+  {
+    return $this->product_state;
+  }
+  public function getUpdateTime()
+  {
+    return $this->update_time;
+  }
+  public function setProductId($product_id)
+  {
+    $this->product_id = $product_id;
+  }
+  public function setCarId($car_id)
+  {
+    $this->car_id = $car_id;
+  }
+  public function setStockId($stock_id)
+  {
+    $this->stock_id = $stock_id;
+  }
+  public function setStartPrice($start_price)
+  {
+    $this->start_price = $start_price;
+  }
+  public function setAskingPrice($asking_price)
+  {
+    $this->asking_price = $asking_price;
+  }
+  public function setStartTime($start_time)
+  {
+    $this->start_time = $start_time;
+  }
+  public function setEndTime($end_time)
+  {
+    $this->end_time = $end_time;
+  }
+  public function setUserId($user_id)
   {
     $this->user_id = $user_id;
   }
-  public function getCarCondition(): ?int
+  public function setCarImg($car_img)
   {
-    return $this->car_condition;
+    $this->car_img = $car_img;
   }
-  public function setCarCondition(int $car_condition): void
+  public function setProductState($product_state)
   {
-    $this->car_condition = $car_condition;
+    $this->product_state = $product_state;
+  }
+  public function setUpdateTime($update_time)
+  {
+    $this->update_time = $update_time;
   }
 }
 ?>
